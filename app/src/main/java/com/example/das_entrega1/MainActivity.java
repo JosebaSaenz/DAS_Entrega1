@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listView.setOnItemClickListener(this);
         textField = findViewById(R.id.textField);
 
+        // Definicion del canal de notificaciones (de Android 8.0 en adelante)
         NotificationManager elManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(this, "IdCanal");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -59,8 +60,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String texto = textField.getText().toString().trim();
                 System.out.println("Texto a insertar: " + '"' + texto + '"');
                 if (texto.isEmpty()) {
+
+                    // El elemento que se quiere sumar a la lista esta vacio, por lo que se muestra un dialogo y se envia una notificacion
                     System.out.println("Texto vacio");
 
+                    // Definicion del dialog: titulo, mensaje y boton
                     AlertDialog.Builder builderDialog = new AlertDialog.Builder(this);
                     builderDialog.setTitle("Alerta");
                     builderDialog.setMessage("No puedes introducir un elemento sin texto");
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     AlertDialog dialog = builderDialog.create();
                     dialog.show();
 
+                    // Definicion de la notificacion: icono, titulo y texto
                     NotificationCompat.Builder builderNotificacion = new NotificationCompat.Builder(this, "id_canal")
                             .setSmallIcon(R.drawable.icono_notificacion)
                             .setContentTitle("Elemento no válido")
@@ -77,11 +82,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-                    // notificationId is a unique int for each notification that you must define
+                    // Llamar a la notificacion
                     notificationManager.notify(1, builderNotificacion.build());
 
 
                 } else {
+                    // El elemento no esta vacio y se suma al listView
                     lista.add(texto);
                     textField.getText().clear();
                     adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, lista);
@@ -92,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int posicion, long l) {
+        // Metodo que muestra un toast cuando se toca sobre un elemento del listView e indica su posicion
         Toast.makeText(this, "Elemento seleccionado: " + posicion, Toast.LENGTH_SHORT).show();
     }
 }
